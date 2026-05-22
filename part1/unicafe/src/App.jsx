@@ -3,16 +3,21 @@ import { useState } from 'react'
 const Button = (props) => <button onClick={props.onClick}>{props.text}</button>
 
 const Statistics = (props) => {
-  return(
+  if(props.total!=0){
+    return(
     <div>
       <p>good {props.good}</p>
       <p>neutral {props.neutral}</p>
       <p>bad {props.bad}</p>
       <p>all {props.total}</p>
-      <p>average {props.total!=0? props.mark/props.total:"Null"}</p>
-      <p>positive {props.total!=0?(props.positive/props.total)*100:"Null"}%</p>
+      <p>average {props.mark/props.total}</p>
+      <p>positive {(props.positive/props.total)*100}%</p>
     </div>
   );
+  }
+  else {
+    return <p>no feedback given</p>
+  }
 }
 
 const App = () => {
