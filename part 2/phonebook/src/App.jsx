@@ -35,7 +35,7 @@ const App = () => {
     const newObj={
       name:newName,
       number:newNumber,
-      id:persons.length+1
+      //id:persons.length+1 server will handle id generation
     }
     let flag=false;
     for(const item of persons){
@@ -50,6 +50,11 @@ const App = () => {
       setNewName('')
       setNewNumber('')
     }
+    axios
+      .post("http://localhost:3001/persons", newObj)
+      .then(response => {
+        setPersons(persons.concat(newObj))
+      })
   }
 
   const filteredPersons=persons.filter(item => (
@@ -65,7 +70,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onSubmit={handleNumbers} name={newName} number={newNumber} onChangeName={handleNameChange} onChangeNumber={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Persons filteredPersons={filteredPersons} />
+      <Persons filteredPersons={filteredPersons} key={filteredPersons.id} />
     </div>
   )
 }
