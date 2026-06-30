@@ -4,6 +4,7 @@ import axios from "axios"
 import Filter from "./components/filter"
 import PersonForm from './components/personForm'
 import Persons from './components/persons'
+import personService from "./services/serverHandling"
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,10 +13,10 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialData => {
+        setPersons(initialData)
       })
   },[])
 
@@ -50,10 +51,10 @@ const App = () => {
       setNewName('')
       setNewNumber('')
     }
-    axios
-      .post("http://localhost:3001/persons", newObj)
-      .then(response => {
-        setPersons(persons.concat(newObj))
+    personService
+      .create(newObj)
+      .then(obj => {
+        setPersons(persons.concat(obj))
       })
   }
 
@@ -70,7 +71,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onSubmit={handleNumbers} name={newName} number={newNumber} onChangeName={handleNameChange} onChangeNumber={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Persons filteredPersons={filteredPersons} key={filteredPersons.id} />
+      <Persons filteredPersons={filteredPersons} />
     </div>
   )
 }
