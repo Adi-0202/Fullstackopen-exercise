@@ -11,4 +11,9 @@ const create = (newObj) => {
     return request.then(response => response.data)
 }
 
-export default { getAll, create }
+const remove = (id, filtered) => {
+    const request=axios.delete(`${url}/${id}`, filtered)
+    return request.then(response => response.data)
+}
+
+export default { getAll, create, remove }
