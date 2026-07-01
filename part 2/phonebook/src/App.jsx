@@ -13,6 +13,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState(null)
+  const [notificationType, setNotificationType] = useState(null)
 
   useEffect(() => {
     personService
@@ -53,14 +54,32 @@ const App = () => {
         const changedPerson={...oldPerson, number:newNumber}
 
         personService
-        .update(oldPerson.id, changedPerson)
-        .then(returnedPerson => {
-          setPersons(persons.map(person => person.id !== oldPerson.id? person: returnedPerson))
-        })
-        setNotification(`Number changed for ${changedPerson.name}`)
-        setTimeout(() => {
-          setNotification(null)
-        },5000)
+          .update(oldPerson.id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(
+              persons.map(person =>
+                person.id !== oldPerson.id
+                  ? person
+                  : returnedPerson
+              )
+            )
+
+            setNotification(
+              `Number changed for ${changedPerson.name}`
+            )
+            setNotificationType("success")
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setNotification(`Information of ${changedPerson.name} has alredy been removed  from server`)
+            setNotificationType("error")
+            setPersons(persons.filter(person => person.id !== oldPerson.id))
+            setTimeout(() => {
+              setNotification(null)
+            },5000)
+          })
       setNewName('')
       setNewNumber('')
       }
@@ -72,6 +91,7 @@ const App = () => {
           setPersons(persons.concat(obj))
         })
       setNotification(`Added ${newObj.name}`)
+      setNotificationType("success")
       setTimeout(() => {
         setNotification(null)
       },5000)
@@ -86,20 +106,25 @@ const App = () => {
 
   const personDelete = (person) => {
     if (window.confirm(`Delete ${person.name}?`)) {
-    personService
-      .remove(person.id)
-      .then(() => {
-        setPersons(
-          persons.filter(item => item.id !== person.id)
-        )
-      })
+      personService
+        .remove(person.id)
+        .then(() => {
+          setPersons(
+            persons.filter(item => item.id !== person.id)
+          )
+        })
+      setNotification(`Deleted ${person.name}`)
+      setNotificationType("success")
+      setTimeout(() => {
+        setNotification(null)
+      },5000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification message={notification} type={notificationType} />
       <div>
         <Filter  value={filter} onChange={(e) => setFilter(e.target.value)} />
       </div>
