@@ -16,4 +16,9 @@ const remove = (id, filtered) => {
     return request.then(response => response.data)
 }
 
-export default { getAll, create, remove }
+const update = (id, filtered) => {
+    const request=axios.put(`${url}/${id}`, filtered)
+    return request.then(response => response.data)
+}
+
+export default { getAll, create, remove, update }

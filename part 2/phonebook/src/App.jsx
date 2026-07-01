@@ -45,17 +45,29 @@ const App = () => {
         break
       }
     }
-    if(flag) alert(`${newName} is already added to phonebook`)
+    if(flag) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const oldPerson=persons.find(item => item.name==newName)
+        const changedPerson={...oldPerson, number:newNumber}
+
+        personService
+        .update(oldPerson.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== oldPerson.id? person: returnedPerson))
+        })
+      setNewName('')
+      setNewNumber('')
+      }
+    }
     else {
-      setPersons(persons.concat(newObj))
+      personService
+        .create(newObj)
+        .then(obj => {
+          setPersons(persons.concat(obj))
+        })
       setNewName('')
       setNewNumber('')
     }
-    personService
-      .create(newObj)
-      .then(obj => {
-        setPersons(persons.concat(obj))
-      })
   }
 
   const filteredPersons=persons.filter(item => (
