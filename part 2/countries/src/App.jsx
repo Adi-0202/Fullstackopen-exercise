@@ -5,6 +5,7 @@ import Filter from "./components/filter"
 const App = () => {
   const [country, setCountry]=useState('')
   const [fetchCountry, setFetchCountry]=useState([])
+  const [selectedCountry, setSelectedCountry]=useState(null)
 
   useEffect(() => {
     axios
@@ -25,7 +26,7 @@ const App = () => {
   return(
     <div>
       find countries <input onChange={handleCountry} />
-      <Filter filteredArray={filteredCountry} />
+      <Filter filteredArray={filteredCountry} setCountry={setCountry} />
     </div>
   )
 }
