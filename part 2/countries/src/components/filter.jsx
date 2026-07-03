@@ -1,3 +1,4 @@
+import Weather from "./weather"
 const Filter = ({filteredArray, setCountry}) => {
     if (filteredArray.length > 10) {
         return <div>Too many matches, specify another filter</div>
@@ -19,6 +20,7 @@ const Filter = ({filteredArray, setCountry}) => {
                 </ul>
 
                 <img src={country.flags.png} alt={country.flags.alt} />
+                <Weather capital={country.capital}/>
             </>
         )
     }
