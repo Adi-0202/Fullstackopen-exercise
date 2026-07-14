@@ -79,30 +79,28 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const id=String(Math.floor(Math.random()*1000)+1)
     const body=request.body
     if(!body.name || !body.number){
         return response.status(400).json({
             "error": "The name or number is missing"
         })
     }
+    Person.find().then(persons => {
+        const exisistingPerson=persons.find(person => body.name===person.name)
 
-    const exisistingPerson=persons.find(person => person.name===body.name)
-
-    if(!exisistingPerson){
-        const person={
-        id:id,
-        name: body.name,
-        number: body.number
+        if(!exisistingPerson){
+            const person= new Person({
+            name: body.name,
+            number: body.number
+            })
+            person.save().then(savedNote => response.json(savedNote))
         }
-        persons=persons.concat(person)
-        response.json(person)
-    }
-    else{
-        return response.status(400).json({
-            "error": "name must be unique"
-        })
-    }
+        else{
+            return response.status(400).json({
+                "error": "name must be unique"
+            })
+        }
+    })
 })
 
 const unknownEndpoint=(request, response) => {
