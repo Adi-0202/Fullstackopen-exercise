@@ -74,8 +74,11 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
     const id=request.params.id
-    persons=persons.filter(item => item.id!=id)
-    response.status(204).end()
+    Person.findByIdAndDelete(id)
+        .then(retult => {
+            response.status(204).end()
+        })
+        .catch(error => console.log('error:', error.message))
 })
 
 app.post('/api/persons', (request, response) => {
