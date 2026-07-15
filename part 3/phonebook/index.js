@@ -60,16 +60,16 @@ app.get('/api/info', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
     const id=request.params.id
-    console.log("id:", id)
-    const person=Person.find().then(persons => {
-        const person=persons.find(item => item.id==id)
-        if(person){
-            response.json(person)
-        }
-        else{
-            response.status(404).end()
-        }
-    })
+    Person.findById(id)
+        .then(person => {
+            if(person){
+                response.json(person)
+            }
+            else{
+                response.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -111,6 +111,16 @@ const unknownEndpoint=(request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if(error.name=="CatchError"){
+        return response.status(400).send({error: "malformed id"})
+    }
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT=process.env.PORT
 app.listen(PORT,
