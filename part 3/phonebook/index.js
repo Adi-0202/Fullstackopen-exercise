@@ -45,17 +45,19 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-app.get('/api/info', (request, response) => {
-    Person.find().then(persons => {
-        const length=persons.length
-        //console.log(length)
-        const time = new Date()
+app.get('/info', (request, response, next) => {
+    Person.find()
+        .then(persons => {
+            const length=persons.length
+            //console.log(length)
+            const time = new Date()
 
-        response.send(`
-        <p>Phonebook has info for ${length} people</p>
-        <p>${time}</p>
-    `)
-    })
+            response.send(`
+            <p>Phonebook has info for ${length} people</p>
+            <p>${time}</p>
+            `)
+        })
+        .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
