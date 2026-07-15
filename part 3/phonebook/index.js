@@ -58,7 +58,7 @@ app.get('/api/info', (request, response) => {
     })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id=request.params.id
     Person.findById(id)
         .then(person => {
@@ -88,22 +88,30 @@ app.post('/api/persons', (request, response) => {
             "error": "The name or number is missing"
         })
     }
-    Person.find().then(persons => {
-        const exisistingPerson=persons.find(person => body.name===person.name)
+    const person= new Person({
+        name: body.name,
+        number: body.number
+        })
+    person.save().then(savedNote => response.json(savedNote))
+})
 
-        if(!exisistingPerson){
-            const person= new Person({
-            name: body.name,
-            number: body.number
-            })
-            person.save().then(savedNote => response.json(savedNote))
-        }
-        else{
-            return response.status(400).json({
-                "error": "name must be unique"
-            })
-        }
-    })
+app.put('/api/persons/:id', (request, response, next) => {
+    const body=request.body
+    const id=request.params.id
+    if(!body.name || !body.number){
+        return response.status(400).json({
+            "error": "The name or number is missing"
+        })
+    }
+    Person.findById(id)
+        .then(person => {
+            if(!person){
+                return response.status(404).end()
+            }
+            person.number=body.number
+            return person.save().then(updatedNote => response.json(updatedNote))
+        })
+        .catch(error => next(error))
 })
 
 const unknownEndpoint=(request, response) => {
