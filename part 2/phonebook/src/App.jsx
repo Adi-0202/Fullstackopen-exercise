@@ -89,14 +89,23 @@ const App = () => {
         .create(newObj)
         .then(obj => {
           setPersons(persons.concat(obj))
+          setNotification(`Added ${obj.name}`)
+          setNotificationType("success")
+
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+
+          setNewName('')
+          setNewNumber('')
         })
-      setNotification(`Added ${newObj.name}`)
-      setNotificationType("success")
-      setTimeout(() => {
-        setNotification(null)
-      },5000)
-      setNewName('')
-      setNewNumber('')
+        .catch(error => {
+          setNotification(error.response.data.error)
+          setNotificationType("error")
+          setTimeout(() => {
+            setNotification(null)
+          },5000)
+        })
     }
   }
 
