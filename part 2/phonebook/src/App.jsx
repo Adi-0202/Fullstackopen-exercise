@@ -1,6 +1,6 @@
-import { use } from 'react'
+//import { use } from 'react'
 import { useState, useEffect } from 'react'
-import axios from "axios"
+//import axios from "axios"
 import Filter from "./components/filter"
 import PersonForm from './components/personForm'
 import Persons from './components/persons'
@@ -72,7 +72,7 @@ const App = () => {
               setNotification(null)
             }, 5000)
           })
-          .catch(error => {
+          .catch(() => {
             setNotification(`Information of ${changedPerson.name} has alredy been removed  from server`)
             setNotificationType("error")
             setPersons(persons.filter(person => person.id !== oldPerson.id))
