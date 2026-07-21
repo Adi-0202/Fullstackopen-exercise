@@ -25,4 +25,21 @@ const favouriteBlog = (array) => {
     return array.length===0? array.length: array[maxIndex]
 }
 
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0) {
+        return null
+    }
+    
+    const result = _.chain(blogs)
+        .countBy('author')
+        .toPairs()
+        .maxBy(pair => pair[1])
+        .value()
+
+    return {
+        author: result[0],
+        blogs: result[1],
+    }
+}
+
 module.exports = { dummy, totalLikes, favouriteBlog, mostBlogs }
