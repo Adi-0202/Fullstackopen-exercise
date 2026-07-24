@@ -3,7 +3,7 @@ const Blog=require('../models/blog')
 
 blogsRouter.get('/', (request, response) => {
     Blog.find({}).then(blogs => {
-        response.json(blogs)
+        response.status(201).json(blogs)
     })
 })
 
