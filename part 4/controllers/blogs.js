@@ -29,7 +29,7 @@ blogsRouter.get('/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-blogsRouter.delete(':id', (request, response, next) => {
+blogsRouter.delete('/:id', (request, response, next) => {
     Blog.findByIdAndDelete(request.params.id)
         .then(() => {
             response.status(204).end()
