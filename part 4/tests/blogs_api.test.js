@@ -1,33 +1,70 @@
-const { test, after } = require('node:test')
+const { test, after, beforeEach } = require('node:test')
 const supertest = require('supertest')
 const app = require('../app')
-const assert = require('assert')
-const mongoose  = require('mongoose')
+const assert = require('node:assert')
+const mongoose = require('mongoose')
+const Blog = require('../models/blog')
+const helper = require('./test_helper')
 
 const api = supertest(app)
 
-test('checking HTTP GET request and no of blogs count', async () => {
-    const response = await api
-        .get('/api/blogs')
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-
-    assert.strictEqual(response.body.length, 1)
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  await Blog.insertMany(helper.initialBlogs)
 })
 
-test('verifing that the unique identifier property of the blog posts is named id', async () => {
-    const response = await api
-        .get('/api/blogs')
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+test('blogs are returned as JSON', async () => {
+  await api
+    .get('/api/blogs')
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+})
 
-    const checkId = response.body.every(blog => {
-        return Object.hasOwn(blog, 'id')
-    })
+test('all blogs are returned', async () => {
+  const response = await api.get('/api/blogs')
 
-    assert.strictEqual(checkId, true)
+  assert.strictEqual(
+    response.body.length,
+    helper.initialBlogs.length
+  )
+})
+
+test('unique identifier property is named id', async () => {
+  const response = await api.get('/api/blogs')
+
+  const allBlogsHaveId = response.body.every(blog =>
+    Object.hasOwn(blog, 'id')
+  )
+
+  assert.strictEqual(allBlogsHaveId, true)
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'testing POST',
+    author: 'zoro',
+    url: 'laa laa laa.com',
+    likes: 8,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDB()
+
+  assert.strictEqual(
+    blogsAtEnd.length,
+    helper.initialBlogs.length + 1
+  )
+
+  const titles = blogsAtEnd.map(blog => blog.title)
+
+  assert(titles.includes('testing POST'))
 })
 
 after(async () => {
-    await mongoose.connection.close()
+  await mongoose.connection.close()
 })
