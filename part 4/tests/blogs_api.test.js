@@ -113,6 +113,17 @@ test('testing whether a blog can be deleted', async () => {
   assert.strictEqual(finalBlog.length, initialBlog.length - 1)
 })
 
+test('testing PUT', async () => {
+  const initialBlog = await helper.blogsInDB()
+  const updatingBlog = initialBlog[0]
+  updatingBlog.likes=updatingBlog.likes+1
+  await api
+    .put(`/api/blogs/${updatingBlog.id}`)
+    .send(updatingBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })

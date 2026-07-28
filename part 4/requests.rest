@@ -11,4 +11,15 @@ Content-Type: application/json
 }
 
 ###
+PUT http://localhost:3003/api/blogs/6a682bb3b4ba6594f10a226c
+Content-Type: application/json
+
+{
+  "title": "move on by accepting everything",
+  "author": "zoro",
+  "url": "zoro.com",
+  "likes": 10
+}
+
+###
 DELETE  http://localhost:3003/api/blogs/6a67f483f037ba3d40c0c0a5
