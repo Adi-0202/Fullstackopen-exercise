@@ -99,6 +99,20 @@ test('testing the object is not added when url or title are missing', async () =
   assert.strictEqual(initialBlog.length, finalBlog.length)
 })
 
+test('testing whether a blog can be deleted', async () => {
+  const initialBlog = await helper.blogsInDB()
+  const blogToBeDeleted = initialBlog[0]
+
+  await api
+    .delete(`/api/blogs/${blogToBeDeleted.id}`)
+    .expect(204)
+
+  const finalBlog = await helper.blogsInDB()
+  const ids = finalBlog.map( blog => blog.id)
+  assert(!ids.includes(blogToBeDeleted.id))
+  assert.strictEqual(finalBlog.length, initialBlog.length - 1)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
