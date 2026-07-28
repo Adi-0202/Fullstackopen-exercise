@@ -10,6 +10,12 @@ blogsRouter.get('/', (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
     if (!Object.hasOwn(body, 'likes')) body.likes=0
+
+    if (!body.title || !body.url){
+        return response.status(400).json({
+            error: 'title or url is missing'
+        })
+    }
     const blog= new Blog(body)
     
     const savedBlog = await blog.save()

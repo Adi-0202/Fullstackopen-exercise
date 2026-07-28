@@ -83,6 +83,22 @@ test('testing if the likes key is missing from POST, it should assign it to zero
   assert.strictEqual(ourBlog.likes, 0)
 })
 
+test('testing the object is not added when url or title are missing', async () => {
+  const initialBlog = await helper.blogsInDB()
+  const newObj = {
+    author: 'lll',
+    likes: 10,
+  }
+  await api
+    .post('/api/blogs')
+    .send(newObj)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const finalBlog = await helper.blogsInDB()
+  assert.strictEqual(initialBlog.length, finalBlog.length)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
