@@ -65,6 +65,24 @@ test('a valid blog can be added', async () => {
   assert(titles.includes('testing POST'))
 })
 
+test('testing if the likes key is missing from POST, it should assign it to zero', async () => {
+  const newObj = {
+    title: 'testing likes key',
+    author: 'myself',
+    url: 'laa.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newObj)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const retrivedDB = await helper.blogsInDB()
+  const ourBlog = retrivedDB.find(blog => blog.title==='testing likes key')
+  assert.strictEqual(ourBlog.likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
