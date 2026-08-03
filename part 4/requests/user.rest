@@ -12,4 +12,14 @@ Content-Type: application/json
 GET http://localhost:3003/api/users
 
 ###
-DELETE http://localhost:3003/api/users/6a6e239fb51c2432ecee9c47
+DELETE http://localhost:3003/api/blogs/6a70b98ddb1717b6060c36cc
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "143 laa laa laa",
+  "author": "zoro",
+  "url": "examples.com",
+  "userId": "6a70823595cf6369d703e5c0"
+}
