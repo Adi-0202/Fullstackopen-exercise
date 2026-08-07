@@ -9,6 +9,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] =  useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -38,6 +41,27 @@ const App = () => {
     }
   }
 
+  const handleCreate = async (event) => {
+    event.preventDefault()
+    try {
+      blogService.setToken(user.token)
+      const newObj={
+        title,
+        author,
+        url
+      }
+      const returnedBlog = await blogService.create(newObj)
+      console.log(returnedBlog)
+      setBlogs(blogs => blogs.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    }
+    catch {
+      console.log(' Fill everything ')
+    }
+  }
+
   return (
     <div>
       {!user && <Forms.LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />}
@@ -50,6 +74,8 @@ const App = () => {
             setUser(null)
           }
         }>logout</button></p>
+        <Forms.CreateBlog title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleCreate={handleCreate}/>
+        <br />
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}

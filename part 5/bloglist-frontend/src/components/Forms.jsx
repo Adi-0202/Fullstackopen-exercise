@@ -14,7 +14,7 @@ const LoginForm = (props) => {
       <div>
       <label>
         password:
-          <input type="text" value={props.password} onChange={({target}) => {props.setPassword(target.value)}} />
+          <input type="password" value={props.password} onChange={({target}) => {props.setPassword(target.value)}} />
       </label>
       </div>
       <br />
@@ -24,4 +24,36 @@ const LoginForm = (props) => {
   )
 }
 
-export default { LoginForm }
+const CreateBlog = (props) => {
+  return(
+    <>
+      <h2>create new</h2>
+      <form onSubmit={props.handleCreate}>
+      <div>
+      <label>
+        title:
+          <input type="text" value={props.title} onChange={({target}) => {props.setTitle(target.value)}} />
+      </label>
+      </div>
+      <br />
+      <div>
+      <label>
+        author:
+          <input type="text" value={props.author} onChange={({target}) => {props.setAuthor(target.value)}} />
+      </label>
+      </div>
+      <br />
+      <div>
+      <label>
+        url:
+          <input type="text" value={props.url} onChange={({target}) => {props.setUrl(target.value)}} />
+      </label>
+      </div>
+      <br />
+      <button>create</button>
+    </form>
+    </>
+  )
+}
+
+export default { LoginForm, CreateBlog }

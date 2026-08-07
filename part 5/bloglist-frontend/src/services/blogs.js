@@ -1,7 +1,6 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
 
-// eslint-disable-next-line no-unused-vars
 let token = null
 
 const setToken = newToken => {
@@ -18,4 +17,11 @@ const getAll = async () => {
   return request.data
 }
 
-export default { getAll, setToken }
+const create = async (newObj) => {
+  const config = {
+    headers: {authorization: token}
+  }
+  const request = await axios.post(baseUrl, newObj, config)
+  return request.data
+}
+export default { getAll, setToken, create }
