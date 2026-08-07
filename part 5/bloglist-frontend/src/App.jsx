@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Forms from './components/Forms'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +13,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -37,7 +40,12 @@ const App = () => {
       setPassword('')
     }
     catch {
-      console.log('wrong credentials')
+      setMessage('wrong username or password')
+      setMessageType('error')
+      setTimeout(() => {
+        setMessage(null)
+        setMessageType(null)
+      }, 5000)
     }
   }
 
@@ -51,8 +59,13 @@ const App = () => {
         url
       }
       const returnedBlog = await blogService.create(newObj)
-      console.log(returnedBlog)
       setBlogs(blogs => blogs.concat(returnedBlog))
+      setMessage(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`)
+      setMessageType('success')
+      setTimeout(() => {
+        setMessage(null)
+        setMessageType(null)
+      }, 5000)
       setTitle('')
       setAuthor('')
       setUrl('')
@@ -64,6 +77,10 @@ const App = () => {
 
   return (
     <div>
+      <Notification
+        message={message}
+        type={messageType}
+      />
       {!user && <Forms.LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />}
       {user && (
         <>
